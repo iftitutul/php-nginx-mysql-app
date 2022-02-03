@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+  namespace: client-x
+  labels:
+    app: mariadb
+spec:
+  replicas: 3
+  serviceName: mariadb
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mariadb
+        image: mariadb:latest
+        ports:
+        - name: mysql
+          protocol: TCP
+          containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_HOST
+          valueFrom: 
+            secretKeyRef: 
+              key: MYSQL_ROOT_HOST
+              name: mariadb-secret
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom: 
+            secretKeyRef: 
+              key: MYSQL_ROOT_PASSWORD
+              name: mariadb-secret
+        - name: MYSQL_USER
+          valueFrom: 
+            secretKeyRef: 
+              key: MYSQL_USER
+              name: mariadb-secret
+        - name: MYSQL_PASSWORD
+          valueFrom: 
+            secretKeyRef: 
+              key: MYSQL_PASSWORD
+              name: mariadb-secret
+        - name: MYSQL_DATABASE
+          valueFrom: 
+            secretKeyRef: 
+              key: MYSQL_DATABASE
+              name: mariadb-secret

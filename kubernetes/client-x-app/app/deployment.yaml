@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: client-x-deployment
+    namespace: client-x
+    labels:
+      app: client-x-app
+spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: client-x-app
+    template:
+        metadata:
+          labels:
+            app: client-x-app
+        spec:
+          containers:
+            - image: iftitutul/php-app:v1.1.0
+              name: php
+              volumeMounts:
+              - name: web-content
+                mountPath: /var/www/vhosts/client-x
+                
+            - image: nginx:1.20-alpine
+              name: web
+              volumeMounts:
+              - name: nginx-conf
+                mountPath: /etc/nginx/nginx.conf
+                subPath: nginx.conf
+                readOnly: true
+              - name: web-content
+                mountPath: /var/www/vhosts/client-x
+                
+          volumes:
+            - name: nginx-conf
+              configMap:
+                name: nginx-cm
+                items:
+                - key: nginx.conf
+                  path: nginx.conf
+            - name: web-content
+              persistentVolumeClaim:
+                claimName: nfs-pvc
+            
+               

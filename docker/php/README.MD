@@ -1,12 +1,12 @@
 - Build a docker image
 
 ```
-docker build -t php-app .
+docker build -t php-app:v1.0 .
 ```                                                             
 
 - Set docker tag
 ```
-docker image tag php-app iftitutul/php-app:v1.0
+docker image tag php-app:v1.0 iftitutul/php-app:v1.0
 ```
 
 - Push docker images into Dockerhub

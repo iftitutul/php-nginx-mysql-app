@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: client-x-service
+    namespace: client-x
+    labels:
+        app: client-x-app
+spec:
+    ports:
+    -   port: 80
+        protocol: TCP
+        targetPort: 80
+    selector:
+        app: client-x-app
+    type: LoadBalancer

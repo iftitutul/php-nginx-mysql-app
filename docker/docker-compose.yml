@@ -17,7 +17,7 @@ services:
             - db_data:/var/lib/mysql/
 
     php:
-        image: iftitutul/php-app:v2.0
+        image: iftitutul/php-app:v1.1.0
         restart: always
         volumes:
             - web_content:/var/www/vhosts/client-x

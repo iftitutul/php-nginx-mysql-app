@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deploy
+  namespace: client-x
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      terminationGracePeriodSeconds: 10
+      # initContainers:
+      # - name: remove-lostfound
+      #   image: busybox
+      #   command: ["rm", "-r", "/var/lib/mysql/lost+found"]
+      #   securityContext:
+      #     privileged: true
+      #   volumeMounts:
+      #     - mountPath: /var/lib/mysql
+      #       name: db-data
+      containers:
+      - name: mysql
+        image: mysql
+        ports:
+        - name: mysql
+          protocol: TCP
+          containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_HOST
+          valueFrom: 
+            secretKeyRef: 
+              key: MYSQL_ROOT_HOST
+              name: mariadb-secret
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom: 
+            secretKeyRef: 
+              key: MYSQL_ROOT_PASSWORD
+              name: mariadb-secret
+        - name: MYSQL_USER
+          valueFrom: 
+            secretKeyRef: 
+              key: MYSQL_USER
+              name: mariadb-secret
+        - name: MYSQL_PASSWORD
+          valueFrom: 
+            secretKeyRef: 
+              key: MYSQL_PASSWORD
+              name: mariadb-secret
+        - name: MYSQL_DATABASE
+          valueFrom: 
+            secretKeyRef: 
+              key: MYSQL_DATABASE
+              name: mariadb-secret
+        volumeMounts:
+          - name: db-data
+            mountPath: /var/lib/mysql
+      volumes:
+       - name: db-data
+         persistentVolumeClaim:
+           claimName: mysql-pvc
