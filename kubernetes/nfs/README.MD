@@ -1,4 +1,4 @@
-<h3>Set NFS server on PVC</h3>
+<h3>Set NFS server on PV</h3>
 
  ```
  # FIXED: Use internal DNS name
